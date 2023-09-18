@@ -5580,6 +5580,14 @@
         afterBundleLoadTrack()
       }
     })
+    // Find the element with the class "logo-link"
+    var logoLink = document.querySelector('.logo-link');
+    
+    // Check if the element exists before attempting to hide it
+    if (logoLink) {
+      // Hide the element by setting its display property to "none"
+      logoLink.style.display = 'none';
+    }
   </script>
   
   
