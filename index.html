@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPTV Stream Player</title>
+    <link href="https://vjs.zencdn.net/8.9.0/video-js.css" rel="stylesheet" />
+    <script defer src="https://vjs.zencdn.net/8.9.0/video.min.js"></script>
     <style>
         body {
             display: flex;
@@ -13,30 +16,36 @@
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
         }
-        #player {
-            width: 768px;
-            height: 432px;
-            margin-bottom: 20px;
-        }
         #streamSelector {
-            width: 768px;
+            width: 360px;
             margin-bottom: 20px;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
-    <video id="player" controls></video>
+    <center>
+        <video
+            id="my-video"
+            class="video-js"
+            controls
+            preload="auto"
+            width="360"
+            height="220"
+            data-setup="{}"
+        >
+            <source src="" type="application/x-mpegURL">
+        </video>
+    </center>
     <select id="streamSelector"></select>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const video = document.getElementById('player');
+            const video = document.getElementById('my-video');
             const streamSelector = document.getElementById('streamSelector');
-            const hls = new Hls();
+            const player = videojs(video);
 
             // Load and parse M3U file
-            fetch('path/to/your/iptv.m3u')
+            fetch('iptv.m3u')
                 .then(response => response.text())
                 .then(data => {
                     const streams = parseM3U(data);
@@ -84,20 +93,8 @@
 
             // Load and play the selected stream
             function loadStream(url) {
-                if (Hls.isSupported()) {
-                    hls.loadSource(url);
-                    hls.attachMedia(video);
-                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                        video.play();
-                    });
-                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                    video.src = url;
-                    video.addEventListener('loadedmetadata', () => {
-                        video.play();
-                    });
-                } else {
-                    console.error('This browser does not support HLS.');
-                }
+                player.src({ type: 'application/x-mpegURL', src: url });
+                player.play();
             }
 
             // Event listener for stream selection
@@ -107,7 +104,7 @@
             });
 
             // Handle video errors
-            video.addEventListener('error', (event) => {
+            player.on('error', (event) => {
                 console.error('Video error: ', event);
             });
         });
