@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPTV Stream Example</title>
+    <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
+    <script src="https://unpkg.com/video.js/dist/video.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         body {
             display: flex;
@@ -12,16 +15,15 @@
             height: 100vh;
             background-color: #f0f0f0;
         }
-        video {
+        .video-js {
             width: 768px;
             height: 432px;
         }
     </style>
 </head>
 <body>
-    <video id="video" controls></video>
+    <video id="video" class="video-js vjs-default-skin" controls></video>
 
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const video = document.getElementById('video');
@@ -48,6 +50,12 @@
 
             video.addEventListener('error', (event) => {
                 console.error('Video error: ', event);
+            });
+
+            videojs(video, {
+                controls: true,
+                autoplay: false,
+                preload: 'auto'
             });
         });
     </script>
